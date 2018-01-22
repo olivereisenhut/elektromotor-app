@@ -1,4 +1,4 @@
-package com.gbssg.oeisenhut.elektromotorapp;
+package com.gbssg.madscientistsclub.elektromotorapp;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;

@@ -1,4 +1,4 @@
-package com.gbssg.oeisenhut.elektromotorapp;
+package com.gbssg.madscientistsclub.elektromotorapp;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -38,11 +38,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(com.gbssg.madscientistsclub.elektromotorapp.R.layout.activity_main);
 
-        imageEMotor = findViewById(R.id.imageEMotor);
-        controlSpeed = findViewById(R.id.controlSpeed);
-        imageEMotorFakeBorder = findViewById(R.id.imageEMotorFakeBorder);
+        imageEMotor = findViewById(com.gbssg.madscientistsclub.elektromotorapp.R.id.imageEMotor);
+        controlSpeed = findViewById(com.gbssg.madscientistsclub.elektromotorapp.R.id.controlSpeed);
+        imageEMotorFakeBorder = findViewById(com.gbssg.madscientistsclub.elektromotorapp.R.id.imageEMotorFakeBorder);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -59,14 +59,14 @@ public class MainActivity extends AppCompatActivity {
     public void changeColorOfBorderForState() {
         boolean bluetoothIsActive = bluetoothAdapter.isEnabled();
         if (bluetoothAdapter == null || !bluetoothIsActive) {
-            imageEMotorFakeBorder.setImageResource(R.color.colorDisconnected);
+            imageEMotorFakeBorder.setImageResource(com.gbssg.madscientistsclub.elektromotorapp.R.color.colorDisconnected);
             if (!bluetoothIsActive) {
                 Intent turnBluetoothOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(turnBluetoothOn, 1);
             }
         }
         else {
-            imageEMotorFakeBorder.setImageResource(R.color.colorConnected);
+            imageEMotorFakeBorder.setImageResource(com.gbssg.madscientistsclub.elektromotorapp.R.color.colorConnected);
         }
     }
 }
