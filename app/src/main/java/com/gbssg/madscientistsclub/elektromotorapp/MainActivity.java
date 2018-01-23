@@ -2,6 +2,7 @@ package com.gbssg.madscientistsclub.elektromotorapp;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import java.io.IOException;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageEMotor;
     ImageView imageEMotorFakeBorder;
     SeekBar controlSpeed;
+    BluetoothSocket socket;
+
     private final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -33,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothAdapter bluetoothAdapter;
     private Set<BluetoothDevice> pairedDevices;
-    public static String EXTRA_ADDRESS = "device_address";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +47,21 @@ public class MainActivity extends AppCompatActivity {
         controlSpeed = findViewById(com.gbssg.madscientistsclub.elektromotorapp.R.id.controlSpeed);
         imageEMotorFakeBorder = findViewById(com.gbssg.madscientistsclub.elektromotorapp.R.id.imageEMotorFakeBorder);
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
         IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(bluetoothReceiver, filter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        socket = BluetoothConnectionSocket.getInstance();
+        try {
+            socket.connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        changeColorOfBorderForState();
+        controlSpeed.setOnSeekBarChangeListener(new ControlSpeedChangeListener());
     }
 
     @Override
@@ -57,15 +71,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeColorOfBorderForState() {
-        boolean bluetoothIsActive = bluetoothAdapter.isEnabled();
-        if (bluetoothAdapter == null || !bluetoothIsActive) {
+        if (socket == null) {
             imageEMotorFakeBorder.setImageResource(com.gbssg.madscientistsclub.elektromotorapp.R.color.colorDisconnected);
-            if (!bluetoothIsActive) {
-                Intent turnBluetoothOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(turnBluetoothOn, 1);
-            }
-        }
-        else {
+            Intent turnBluetoothOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(turnBluetoothOn, 1);
+        } else {
             imageEMotorFakeBorder.setImageResource(com.gbssg.madscientistsclub.elektromotorapp.R.color.colorConnected);
         }
     }
