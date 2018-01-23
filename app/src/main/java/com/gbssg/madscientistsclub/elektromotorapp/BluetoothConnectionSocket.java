@@ -31,6 +31,15 @@ class BluetoothConnectionSocket {
         return socket;
     }
 
+    static void closeConnection() {
+        try {
+            socket.close();
+            socket = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static BluetoothDevice getDefaultDevice(BluetoothAdapter adapter) {
         Set<BluetoothDevice> devices = adapter.getBondedDevices();
         BluetoothDevice arduino = null;

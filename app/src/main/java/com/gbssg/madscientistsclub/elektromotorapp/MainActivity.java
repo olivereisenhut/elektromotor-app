@@ -2,7 +2,6 @@ package com.gbssg.madscientistsclub.elektromotorapp;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageEMotor;
     ImageView imageEMotorFakeBorder;
     SeekBar controlSpeed;
-    BluetoothSocket socket;
 
     private final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         @Override
@@ -30,8 +28,16 @@ public class MainActivity extends AppCompatActivity {
             if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
                         BluetoothAdapter.ERROR);
-                changeColorOfBorderForState();
+                switch (state) {
+                    case BluetoothAdapter.STATE_OFF:
+                        BluetoothConnectionSocket.closeConnection();
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        tryToConnectSocket();
+                        break;
+                }
             }
+            changeColorOfBorderForState();
         }
     };
 
@@ -54,13 +60,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        socket = BluetoothConnectionSocket.getInstance();
-        try {
-            socket.connect();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        changeColorOfBorderForState();
+        tryToConnectSocket();
         controlSpeed.setOnSeekBarChangeListener(new ControlSpeedChangeListener());
     }
 
@@ -70,13 +70,32 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(bluetoothReceiver);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        tryToConnectSocket();
+    }
+
     public void changeColorOfBorderForState() {
-        if (socket == null) {
-            imageEMotorFakeBorder.setImageResource(com.gbssg.madscientistsclub.elektromotorapp.R.color.colorDisconnected);
-            Intent turnBluetoothOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(turnBluetoothOn, 1);
+        if (BluetoothConnectionSocket.getInstance() == null) {
+            imageEMotorFakeBorder.setImageResource(R.color.colorDisconnected);
+            if (bluetoothAdapter == null) {
+                Intent turnBluetoothOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(turnBluetoothOn, 1);
+            }
         } else {
-            imageEMotorFakeBorder.setImageResource(com.gbssg.madscientistsclub.elektromotorapp.R.color.colorConnected);
+            imageEMotorFakeBorder.setImageResource(R.color.colorConnected);
         }
+    }
+
+    private void tryToConnectSocket() {
+        if (BluetoothConnectionSocket.getInstance() != null) {
+            try {
+                BluetoothConnectionSocket.getInstance().connect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        changeColorOfBorderForState();
     }
 }
