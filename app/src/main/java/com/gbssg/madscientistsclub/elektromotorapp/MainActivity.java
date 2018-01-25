@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     public void changeColorOfBorderForState() {
         if (BluetoothConnectionSocket.getInstance() == null) {
             imageEMotorFakeBorder.setImageResource(R.color.colorDisconnected);
-            if (bluetoothAdapter == null) {
+            if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
                 Intent turnBluetoothOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(turnBluetoothOn, 1);
             }
