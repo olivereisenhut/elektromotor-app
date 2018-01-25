@@ -3,6 +3,7 @@
     package="com.gbssg.madscientistsclub.elektromotorapp">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 
     <application
         android:allowBackup="true"
