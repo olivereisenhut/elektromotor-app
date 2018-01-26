@@ -40,6 +40,16 @@ class BluetoothConnectionSocket {
         }
     }
 
+    static boolean canConnectToDefaultDevice() {
+        try {
+            socket.connect();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     private static BluetoothDevice getDefaultDevice(BluetoothAdapter adapter) {
         Set<BluetoothDevice> devices = adapter.getBondedDevices();
         BluetoothDevice arduino = null;

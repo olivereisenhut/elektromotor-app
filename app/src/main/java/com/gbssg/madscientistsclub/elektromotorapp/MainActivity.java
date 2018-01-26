@@ -1,7 +1,6 @@
 package com.gbssg.madscientistsclub.elektromotorapp;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import java.io.IOException;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,9 +38,6 @@ public class MainActivity extends AppCompatActivity {
             changeColorOfBorderForState();
         }
     };
-
-    private BluetoothAdapter bluetoothAdapter;
-    private Set<BluetoothDevice> pairedDevices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +72,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeColorOfBorderForState() {
-        if (BluetoothConnectionSocket.getInstance() == null) {
+        if (BluetoothConnectionSocket.getInstance() == null || !BluetoothConnectionSocket.canConnectToDefaultDevice()) {
+
             imageEMotorFakeBorder.setImageResource(R.color.colorDisconnected);
-            if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+            final BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
+
+            if (defaultAdapter == null || !defaultAdapter.isEnabled()) {
                 Intent turnBluetoothOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(turnBluetoothOn, 1);
             }
@@ -93,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 BluetoothConnectionSocket.getInstance().connect();
             } catch (IOException e) {
+                BluetoothConnectionSocket.closeConnection();
                 e.printStackTrace();
             }
         }
