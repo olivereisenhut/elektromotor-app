@@ -22,6 +22,7 @@ public class BluetoothBroadcastReceiver extends BroadcastReceiver {
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
                         mainActivity.getBluetoothConnectionManager().tryCloseSocket();
+                        mainActivity.forceToEnableBluetooth();
                         break;
                     case BluetoothAdapter.STATE_ON:
                         mainActivity.getBluetoothConnectionManager().tryConnectSocket();

@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothPairedDe
 
 
 
-    private void forceToEnableBluetooth() {
+    public void forceToEnableBluetooth() {
         final BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (defaultAdapter == null || !defaultAdapter.isEnabled()) {
