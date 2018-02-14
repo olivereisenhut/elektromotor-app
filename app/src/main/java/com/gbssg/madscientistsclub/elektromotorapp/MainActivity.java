@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothPairedDe
 
     @Override
     public void pairingFinished(boolean successful) {
+        controlSpeed.setEnabled(successful);
         changeColorOfBorderForState(successful);
     }
 
