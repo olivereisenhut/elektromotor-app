@@ -10,21 +10,21 @@ import java.io.IOException;
 public class ControlSpeedChangeListener implements SeekBar.OnSeekBarChangeListener {
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
         if (BluetoothConnectionSocket.getDefaultInstance() != null) {
             try {
                 BluetoothConnectionSocket.getDefaultInstance().getOutputStream().write(progress);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
+    public void onStartTrackingTouch(final SeekBar seekBar) {
     }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
+    public void onStopTrackingTouch(final SeekBar seekBar) {
     }
 }

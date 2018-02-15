@@ -6,13 +6,13 @@ import android.bluetooth.BluetoothDevice;
 
 import java.util.Set;
 
-public class BluetoothDeviceManager {
+class BluetoothDeviceManager {
 
-    public static BluetoothDevice getDefaultDevice() {
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        Set<BluetoothDevice> devices = adapter.getBondedDevices();
+    static BluetoothDevice getDefaultDevice() {
+        final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        final Set<BluetoothDevice> devices = adapter.getBondedDevices();
         BluetoothDevice arduino = null;
-        for (BluetoothDevice device : devices) {
+        for (final BluetoothDevice device : devices) {
             if (device.getName().equals("HMSoft")) {
                 arduino = device;
                 break;
