@@ -10,9 +10,9 @@ import com.gbssg.madscientistsclub.elektromotorapp.MainActivity;
 
 public class BluetoothBroadcastReceiver extends BroadcastReceiver {
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
 
-        MainActivity mainActivity = (MainActivity) context;
+        final MainActivity mainActivity = (MainActivity) context;
         final String action = intent.getAction();
         if (mainActivity != null && action != null) {
 
